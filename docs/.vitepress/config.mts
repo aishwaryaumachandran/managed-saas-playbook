@@ -98,11 +98,6 @@ export default withMermaid(
         { icon: 'github', link: 'https://github.com/aishwaryaumachandran/managed-saas-playbook' },
       ],
 
-      editLink: {
-        pattern: 'https://github.com/aishwaryaumachandran/managed-saas-playbook/edit/main/docs/:path',
-        text: 'Edit this page',
-      },
-
       footer: {
         message: 'Community-curated · Grounded in official Microsoft Learn docs',
       },
