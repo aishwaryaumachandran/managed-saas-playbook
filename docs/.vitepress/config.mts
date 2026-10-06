@@ -94,6 +94,11 @@ export default withMermaid(
       ],
 
       search: { provider: 'local' },
+      lastUpdated: {
+        formatOptions: {
+          dateStyle: 'long',
+        },
+      },
 
       // Update to your repo
       socialLinks: [
