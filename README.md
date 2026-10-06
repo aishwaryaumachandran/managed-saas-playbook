@@ -17,9 +17,9 @@ managed-saas-playbook/
 │  ├─ index.md             # Home (VitePress "home" layout)
 │  ├─ start/               # 01–02
 │  ├─ qualify/             # 03–05
-│  ├─ design/              # 06–10 (incl. Mermaid decision guide)
-│  ├─ deliver/             # 11 Marketplace & Delivery
-│  ├─ govern/              # 12–13
+│  ├─ design/              # 06–12 (incl. Mermaid model diagrams)
+│  ├─ deliver/             # 13 Marketplace & Delivery
+│  ├─ govern/              # 14–15
 │  ├─ reference/           # Glossary, Reference Implementations
 │  └─ sources.md
 ├─ package.json
@@ -60,8 +60,3 @@ Site URL: `https://aishwaryaumachandran.github.io/managed-saas-playbook/`.
 - Mermaid diagrams use fenced ```mermaid blocks (via `vitepress-plugin-mermaid`).
 - Prefer **linking** official Microsoft Learn pages over duplicating them; keep
   the "Last verified" note on `docs/sources.md` current.
-
-## Note on internal materials
-
-Internal V-team artifacts (kickoff decks, slide-prompt drafts) are kept **out of
-this public repo** — they live in a separate, non-published folder.

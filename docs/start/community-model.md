@@ -18,7 +18,7 @@ assessment as the standard intake scorecard.
 
 1. Understand SaaS and multitenancy
 2. Learn the design methodology and the five principles
-3. Pick a tenancy model
+3. Explore the [tenancy model diagrams](../design/tenancy-decision-guide.md)
 4. Run the WAF assessment
 5. Plug into Marketplace delivery
 
@@ -28,5 +28,4 @@ Optional artifacts this community could standardize next:
 
 - Community charter and roles
 - Architecture review checklist (WAF-aligned)
-- Tenancy-model decision guide
 - Marketplace onboarding runbook

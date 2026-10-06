@@ -1,4 +1,4 @@
-# 09 · Data Patterns
+# 10 · Data Patterns
 
 ::: info TL;DR
 Choose a data pattern along the isolation spectrum — from a shared

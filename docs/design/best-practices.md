@@ -50,6 +50,13 @@ Optimization, Operational Excellence, Performance Efficiency** .
   follow a cloud security baseline. 
 - **Isolate customers and segments** — use the tenancy model as the data
   isolation strategy. 
+- Enforce tenant-scoped authorization across requests, background jobs, and
+  support operations using validated tenant context and least-privilege
+  permissions. Use separate workload identities, keys, and secrets where
+  appropriate to the isolation model; identity separation alone does not
+  guarantee data isolation. See
+  [Security and identity](../sources.md#security-and-identity) in the
+  official sources.
 - **Start with Zero Trust and least privilege**; default to no access. 
 - **Avoid credentials where possible** — use managed identity; protect any
   unavoidable secrets. 

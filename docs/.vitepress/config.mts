@@ -62,23 +62,25 @@ export default withMermaid(
           text: 'Design',
           items: [
             { text: '06 · Best Practices at a Glance', link: '/design/best-practices' },
-            { text: '07 · Tenancy Models & Isolation', link: '/design/tenancy-models' },
-            { text: '08 · Tenancy Decision Guide', link: '/design/tenancy-decision-guide' },
-            { text: '09 · Data Patterns', link: '/design/data-patterns' },
-            { text: '10 · Onboarding, Lifecycle & AI', link: '/design/lifecycle-and-ai' },
+            { text: '07 · Ownership Matrix', link: '/design/ownership-matrix' },
+            { text: '08 · Tenancy Models & Isolation', link: '/design/tenancy-models' },
+            { text: '09 · Tenancy Model Diagrams', link: '/design/tenancy-decision-guide' },
+            { text: '10 · Data Patterns', link: '/design/data-patterns' },
+            { text: '11 · Control-Plane Reference Architecture', link: '/design/control-plane' },
+            { text: '12 · Onboarding, Lifecycle & AI', link: '/design/lifecycle-and-ai' },
           ],
         },
         {
           text: 'Deliver',
           items: [
-            { text: '11 · Marketplace & Delivery', link: '/deliver/marketplace' },
+            { text: '13 · Marketplace & Delivery', link: '/deliver/marketplace' },
           ],
         },
         {
           text: 'Govern',
           items: [
-            { text: '12 · Governance', link: '/govern/governance' },
-            { text: '13 · Qualification Summary', link: '/govern/qualification-summary' },
+            { text: '14 · Governance', link: '/govern/governance' },
+            { text: '15 · Qualification Summary', link: '/govern/qualification-summary' },
           ],
         },
         {
@@ -99,7 +101,7 @@ export default withMermaid(
       ],
 
       footer: {
-        message: 'Community-curated · Grounded in official Microsoft Learn docs',
+        message: 'Managed SaaS Playbook',
       },
     },
   })

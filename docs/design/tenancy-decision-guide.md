@@ -1,55 +1,154 @@
-# 08 · Tenancy Decision Guide
+---
+title: 09 · Tenancy Model Diagrams
+description: Shared and dedicated resources in Microsoft's four common tenancy models.
+outline: [3, 4]
+---
 
-::: info TL;DR
-Tenancy is a **commercial *and* technical** decision across
-business objectives, compliance, scale, automation capacity, and SLAs.
-Expecting many customers pushes toward shared infrastructure; few customers
-or high isolation needs can justify single-tenant. 
-:::
+## 09 · Tenancy Model Diagrams
 
-## Decision flow
+These conceptual Mermaid diagrams illustrate the models described in
+[Microsoft's tenancy-model guidance][models]. They show how tenants map to
+shared or dedicated resources, not a prescribed selection flow. Application
+and data tiers are illustrative; arrows do not replace tenant-scoped
+authorization or prove isolation.
+
+### Automated single-tenant deployments
 
 ```mermaid
-flowchart TD
-    A[New opportunity] --> B{Many customers expected?}
-    B -->|Few, or high isolation / regulated| C[Automated single-tenant]
-    B -->|Many, cost-sensitive| D{Do all tenants need the same isolation?}
-    D -->|Yes, share everything| E[Fully multitenant]
-    D -->|No, some tenants need isolation| F{Isolate the whole stack or one tier?}
-    F -->|Whole stack for some tenants| G[Vertically partitioned]
-    F -->|One heavy tier per tenant, e.g. database| H[Horizontally partitioned]
+flowchart TB
+    A[Tenant A] --> AppA
+    B[Tenant B] --> AppB
+    C[Tenant C] --> AppC
+
+    subgraph DA[Dedicated deployment A]
+        AppA[Application A] --> DBA[(Database A)]
+    end
+    subgraph DB[Dedicated deployment B]
+        AppB[Application B] --> DBB[(Database B)]
+    end
+    subgraph DC[Dedicated deployment C]
+        AppC[Application C] --> DBC[(Database C)]
+    end
 ```
 
-## Decision factors
+Each tenant has its own application and data resources. The depicted workload
+resources are not shared between tenants.
 
-Weigh these factors when choosing a model :
+Dedicated deployments reduce cross-tenant resource contention and allow
+progressive updates across tenants. They also increase infrastructure and
+fleet-maintenance overhead, so provisioning and updates need automation.
 
-| Factor | Pushes toward sharing | Pushes toward isolation |
-| --- | --- | --- |
-| **Business objectives** | Many customers, cost-sensitive | Premium / dedicated offers |
-| **Compliance & residency** | Standard requirements | Regulated data, sovereign regions, customer-managed keys |
-| **Scale** | Very high tenant counts | Few, very large tenants |
-| **Automation capacity** | Mature IaC and pipelines | Limited automation (favor fewer moving parts) |
-| **SLAs** | Uniform SLA across tenants | Differentiated SLAs per tier |
+Source: [Microsoft: Automated single-tenant deployments][single-tenant].
 
-## When to choose each model
+### Fully multitenant deployments
 
-| If you… | Choose |
-| --- | --- |
-| Have **few customers** or strict isolation/regulatory needs | **Automated single-tenant** |
-| Expect **many, cost-sensitive** tenants with uniform needs | **Fully multitenant** |
-| Serve a **mixed base** where some tenants pay for full isolation | **Vertically partitioned** |
-| Need to isolate the **one tier that carries most load** (often data) | **Horizontally partitioned** |
+```mermaid
+flowchart TB
+    A[Tenant A] --> App
+    B[Tenant B] --> App
+    C[Tenant C] --> App
 
-::: tip ✅ Do
-- Document the decision and its trade-offs in the tenant-to-deployment map.
-- Revisit the choice as customer count and compliance needs change.
-:::
+    subgraph Shared[Shared deployment]
+        App[Shared application tier] --> Data[(Shared tenant-scoped data store)]
+    end
+```
 
-::: danger ⛔ Avoid
-- Defaulting to single-tenant "for safety" when you expect many customers —
-  cost efficiency collapses (100 tenants ≈ 100× cost).
-- Choosing fully multitenant when a subset of tenants has hard isolation or
-  residency requirements.
-:::
+All tenants share the application and data infrastructure. Tenant data remains
+logically separated within the shared store.
 
+Sharing improves resource utilization and reduces the number of deployments to
+maintain. Tenant-scoped access, noisy-neighbor controls, per-tenant cost
+attribution, and shared scale limits still need attention; a deployment change
+can affect every tenant it hosts.
+
+Source: [Microsoft: Fully multitenant deployments][fully-multitenant].
+
+### Vertically partitioned deployments
+
+Microsoft describes both mixed shared/dedicated deployments and geographic
+partitioning under this model.
+
+#### Shared and dedicated deployments
+
+```mermaid
+flowchart TB
+    A[Tenant A] --> SharedApp
+    B[Tenant B] --> SharedApp
+    C[Tenant C] --> DedicatedApp
+
+    subgraph Shared[Shared deployment for A and B]
+        SharedApp[Shared application tier] --> SharedData[(Shared database)]
+    end
+    subgraph Dedicated[Dedicated deployment for C]
+        DedicatedApp[Application C] --> DedicatedData[(Database C)]
+    end
+```
+
+Tenants A and B share a deployment; tenant C has a dedicated application and
+data stack.
+
+This combines shared-resource efficiency with dedicated capacity or isolation
+for selected tenants. The solution must support both deployment arrangements
+and maintain tenant placement; moving tenants between them requires migration.
+
+#### Geographic partitioning
+
+```mermaid
+flowchart TB
+    A[Tenant A] --> App1
+    B[Tenant B] --> App1
+    C[Tenant C] --> App2
+    D[Tenant D] --> App2
+
+    subgraph Region1[Deployment in region 1]
+        App1[Application for A and B] --> Data1[(Data for A and B)]
+    end
+    subgraph Region2[Deployment in region 2]
+        App2[Application for C and D] --> Data2[(Data for C and D)]
+    end
+```
+
+Tenants map to deployments in different regions. Tenants within a regional
+deployment can share resources; geographic partitioning does not require
+dedicated infrastructure for every tenant.
+
+Regional placement supports tenants in different geographies, with additional
+deployment and routing management. The diagram does not imply cross-region
+replication or failover; those are separate design decisions.
+
+Source for both examples: [Microsoft: Vertically partitioned deployments][vertical].
+
+### Horizontally partitioned deployments
+
+```mermaid
+flowchart TB
+    A[Tenant A] --> App
+    B[Tenant B] --> App
+    C[Tenant C] --> App
+
+    App[Shared application tier]
+
+    App -->|Tenant A data| DBA[(Tenant A database)]
+    App -->|Tenant B data| DBB[(Tenant B database)]
+    App -->|Tenant C data| DBC[(Tenant C database)]
+```
+
+The application tier is shared, while each tenant has a dedicated database.
+Other components can be isolated in the same way.
+
+Dedicated components can reduce contention at that tier while preserving
+sharing elsewhere. The shared application still needs tenant-scoped
+authorization and routing, and per-tenant components need automated management.
+
+Source: [Microsoft: Horizontally partitioned deployments][horizontal].
+
+For definitions and a comparison table, see
+[Tenancy Models & Isolation](tenancy-models.md). For selection considerations,
+see Microsoft's [Decide which model to use][selection].
+
+[models]: https://learn.microsoft.com/azure/architecture/guide/multitenant/considerations/tenancy-models
+[single-tenant]: https://learn.microsoft.com/azure/architecture/guide/multitenant/considerations/tenancy-models#automated-single-tenant-deployments
+[fully-multitenant]: https://learn.microsoft.com/azure/architecture/guide/multitenant/considerations/tenancy-models#fully-multitenant-deployments
+[vertical]: https://learn.microsoft.com/azure/architecture/guide/multitenant/considerations/tenancy-models#vertically-partitioned-deployments
+[horizontal]: https://learn.microsoft.com/azure/architecture/guide/multitenant/considerations/tenancy-models#horizontally-partitioned-deployments
+[selection]: https://learn.microsoft.com/azure/architecture/guide/multitenant/considerations/tenancy-models#decide-which-model-to-use

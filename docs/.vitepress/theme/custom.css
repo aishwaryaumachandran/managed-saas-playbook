@@ -5,6 +5,11 @@
   --vp-c-brand-2: #0078d4;
   --vp-c-brand-3: #2b88d8;
   --vp-c-brand-soft: rgba(0, 120, 212, 0.14);
+
+  /* Keep white button text readable in both themes. */
+  --vp-button-brand-bg: #0078d4;
+  --vp-button-brand-hover-bg: #0067b8;
+  --vp-button-brand-active-bg: #0067b8;
 }
 
 .dark {

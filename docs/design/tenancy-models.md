@@ -1,4 +1,4 @@
-# 07 · Tenancy Models & Isolation
+# 08 · Tenancy Models & Isolation
 
 ::: info TL;DR
 Start by defining what a **tenant** is for your business, treat **isolation
@@ -6,7 +6,7 @@ as a spectrum** (not a switch), keep a **tenant-to-deployment map**, and
 choose one of the **four common tenancy models**. 
 :::
 
-## 7.1 First, define a "tenant"
+## 8.1 First, define a "tenant"
 
 Start tenancy design by defining what a tenant *is* for your
 business. 
@@ -17,7 +17,7 @@ business.
 - **B2C:** the customer–tenant–user relationship is looser; a tenant might be an
   individual, a family, or a group. 
 
-## 7.2 Isolation is a spectrum, not a switch
+## 8.2 Isolation is a spectrum, not a switch
 
 Isolation is a **continuum from "shared nothing" (fully
 isolated) to "shared everything" (fully shared)**, and you can place each tier of
@@ -29,7 +29,7 @@ your architecture at a different point.
 
 More sharing lowers cost but raises blast radius and noisy-neighbor risk. 
 
-## 7.3 Tenants vs. deployments (stamps)
+## 8.3 Tenants vs. deployments (stamps)
 
 A **tenant** is a logical customer; a **deployment** (also called a *stamp* or
 *supertenant*) is a set of infrastructure. The relationship can be one-to-one or
@@ -37,16 +37,17 @@ one-to-many, so maintain a **tenant mapping** that routes each request to the
 correct deployment. Modeling the solution as a **Deployment Stamp** lets you
 redeploy it as a unit as new opportunities arise.   
 
-## 7.4 The four common tenancy models
+## 8.4 The four common tenancy models
 
 | Model | What is shared | Best fit | Key risks |
 | --- | --- | --- | --- |
 | **Automated single-tenant deployments** | Nothing — dedicated infrastructure per tenant | Few customers; high isolation / regulatory needs | Low cost efficiency (100 tenants ≈ 100× cost); heavy fleet maintenance |
 | **Fully multitenant deployment** | Everything — one shared set of infrastructure | Large numbers of tenants; cost-sensitive | Data-leak risk, noisy neighbor, changes affect all tenants, scale limits |
-| **Vertically partitioned** | Some tiers shared, dedicated stamps for specific tenants | Mixed base; premium/regulated tenants pay for isolation | Codebase must support both paths; migration between them |
+| **Vertically partitioned** | Shared and dedicated deployments, or separate regional deployments | Mixed isolation needs or tenants in different geographies | Deployment management, tenant routing, and migration |
 | **Horizontally partitioned** | Shared app tier, isolated component(s) per tenant (e.g., database) | Isolating the tier that carries most load | Automated deployment/management of the per-tenant components |
 
-Need help choosing? Use the [Tenancy Decision Guide](tenancy-decision-guide.md).
+See the shared and dedicated resources in
+[Tenancy Model Diagrams](tenancy-decision-guide.md).
 
 ::: tip ✅ Do
 - Apply **different isolation levels per tier** (identity, data, network).
@@ -58,4 +59,3 @@ Need help choosing? Use the [Tenancy Decision Guide](tenancy-decision-guide.md).
 - Picking a tenancy model by accident or default.
 - Assuming isolation is all-or-nothing.
 :::
-
